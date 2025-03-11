@@ -26,11 +26,7 @@ uint16_t steamThreshold = 1000;
 int callback_id;
 
 void on_steam_threshold_update(struct mosquitto *mosq, void *obj, int mid, int qos_count, const int *granted_qos) {
-    printf("Nouvelle valeur de seuil de vapeur reÃ§ue\n");
-}
-
-void on_message(struct mosquitto *mosq, void *obj, const mosquitto_message *message) {
-    printf("Message reÃ§u\n");
+    printf("Nouvelle valeur de seuil de valeur reçue\n");
 }
 
 int main() {
@@ -44,10 +40,9 @@ int main() {
     }
 
 
+
     mosquitto_subscribe(mosq, NULL, STEAM_THRESHOLD_TOPIC, 1);
     mosquitto_subscribe_callback_set(mosq, on_steam_threshold_update);
-
-    mosquitto_message_callback_set(mosq, on_message);
 
 
 
@@ -59,7 +54,7 @@ int main() {
     modbus_set_slave(ctx, SLAVE_ID);
 
     if (modbus_connect(ctx) == -1) {
-        fprintf(stderr, "Erreur : Impossible de se connecter Ã  Modbus\n");
+        fprintf(stderr, "Erreur : Impossible de se connecter à Modbus\n");
         modbus_free(ctx);
         return 1;
     }
@@ -80,7 +75,7 @@ int main() {
             bool steam_bool = steam > steamThreshold;
             mosquitto_publish(mosq, NULL, STEAM_BOOL_TOPIC, 1, steam_bool ? "1" : "0", 0, false);
 
-            printf("MQTT envoyÃ© : %s\n", payload);
+            printf("MQTT envoyé : %s\n", payload);
         }
         sleep(1);
     }
@@ -92,3 +87,6 @@ int main() {
     mosquitto_lib_cleanup();
     return 0;
 }
+
+
+
